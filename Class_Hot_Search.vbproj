@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <RootNamespace>Class_Hot_Search</RootNamespace>
+    <UseWPF>true</UseWPF>
+	  <OutputType>WinExe</OutputType>
+	  <Title>班级热搜排行榜</Title>
+	  <Authors>思锐工作室 SR Studio</Authors>
+	  <Copyright>Copyright ©️ 2024 思锐工作室</Copyright>
+	  <Description>适用于班级中投票或热搜统计的小工具。</Description>
+	  <ApplicationIcon>gas-burner-custom.ico</ApplicationIcon>
+	  <PackageIcon>gas-burner-custom.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="gas-burner-custom.png" />
+    <None Remove="HotSearch.png" />
+    <None Remove="HotSearchHead.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="gas-burner-custom.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="HotSearch.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HotSearchHead.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Import Include="System.Windows" />
+    <Import Include="System.Windows.Controls" />
+    <Import Include="System.Windows.Data" />
+    <Import Include="System.Windows.Documents" />
+    <Import Include="System.Windows.Input" />
+    <Import Include="System.Windows.Media" />
+    <Import Include="System.Windows.Media.Imaging" />
+    <Import Include="System.Windows.Navigation" />
+    <Import Include="System.Windows.Shapes" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="R:\重要文件\编程相关\我的ICO\gas-burner-custom.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignColors" Version="3.1.1-ci795" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci795" />
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="3.1.1-ci795" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="gas-burner-custom.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>
