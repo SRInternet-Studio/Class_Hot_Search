@@ -1,0 +1,74 @@
+﻿<Window x:Class="Window1"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Class_Hot_Search"
+xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="班级热搜排行榜" Height="473" Width="847" Icon="/gas-burner-custom.png" Background="#FFF6F6F6" MinHeight="390" MinWidth="760" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <materialDesign:ColorZone x:Name="colorZone" Padding="16"
+                              materialDesign:ElevationAssist.Elevation="Dp4"
+                              DockPanel.Dock="Top"
+                              Mode="PrimaryMid" Background="#FFFF6565" Height="57"
+                                          CornerRadius="0" RenderTransformOrigin="0.5,0.5" Foreground="White">
+            <materialDesign:ColorZone.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </materialDesign:ColorZone.RenderTransform>
+            <DockPanel VerticalAlignment="Center" Margin="5,-5,2,-5">
+                <ProgressBar x:Name="Chat_round_progress" DockPanel.Dock="Right"
+IsIndeterminate="True"
+Style="{StaticResource MaterialDesignCircularProgressBar}"
+Value="0" Foreground="White" Width="22" Height="21" Margin="0,0,2,2" Visibility="Hidden" />
+
+                <TextBlock x:Name="SubTitle"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   AutomationProperties.Name="帕帕 AI"
+                   FontSize="21"
+                   FontFamily="HarmonyOS Sans SC Medium" RenderTransformOrigin="0.5,0.5" >
+                    <TextBlock.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </TextBlock.RenderTransform><Run Language="zh-cn" Text="关于"/></TextBlock>
+            </DockPanel>
+        </materialDesign:ColorZone>
+        <Image x:Name="image" Margin="16,72,0,0" Source="/gas-burner-custom.png" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="73" Height="72.76">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <TextBlock x:Name="textBlock" TextWrapping="Wrap" Margin="93,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="32" Foreground="#FFF41E1E" Text="Class Hot Search"/>
+        <TextBlock TextWrapping="Wrap" Margin="92,114,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Foreground="#FFFF6565" Width="543"><Run Text="适用于班级大屏的"/><Run Language="zh-cn" Text="事件热度排行榜工具。"/></TextBlock>
+        <materialDesign:Card UniformCornerRadius="10" Margin="18,160,18,18">
+            <Grid>
+                <TextBox Margin="15,10,15,0" TextWrapping="NoWrap" Text="版本：v1.0.0 release 2412。基于 Material Design 3 设计, .NET Framework 9.0 Preview 构建。" VerticalAlignment="Top" IsReadOnly="True" FontFamily="HarmonyOS Sans SC Medium" FontSize="16"/>
+                <TextBox Margin="15,55,15,0" TextWrapping="NoWrap" Text="Class_Hot_Search 在Github上的免费开源项目，遵循 MIT 开源协议。" VerticalAlignment="Top" IsReadOnly="True" FontFamily="HarmonyOS Sans SC Medium" FontSize="16"/>
+                <Button x:Name="github" Content="打开" HorizontalAlignment="Right" Height="27" Margin="0,51,15,0" VerticalAlignment="Top" Background="#FFF65E5E" BorderBrush="{x:Null}" Width="65" FontSize="12"/>
+                <Image x:Name="sr" Margin="0,0,7,12" Source="/sr.png" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="63.76" Height="63.76" Cursor="Hand"/>
+                <TextBlock x:Name="sr2" HorizontalAlignment="Right" Height="68" Margin="0,0,70,3" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="323" Foreground="#FF852BE5" FontFamily="HarmonyOS Sans SC Black" FontSize="22" TextAlignment="Right" Cursor="Hand">
+                    <TextBlock.Background>
+                        <SolidColorBrush Color="White" Opacity="0.015"/>
+                    </TextBlock.Background><Run Text="思锐工作室"/><Run Text="（SR 思锐）"/><LineBreak/><Run Text="SR Studio/SRInternet Studio"/><Run Language="zh-cn" Text="  "/></TextBlock>
+                <Image x:Name="tiktok" Margin="0,0,401,15" Source="Tiktok_round.png" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="43.76" Height="43.76" Cursor="Hand"/>
+                <Image x:Name="bilibili" Margin="0,0,459,13" Source="bilibili round.png" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="43.76" Height="43.76" Cursor="Hand"/>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</Window>

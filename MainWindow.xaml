@@ -5,30 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Class_Hot_Search"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Name="window" x:Class="MainWindow"
         mc:Ignorable="d"
-        Title="班级热搜排行榜" Height="768" Width="452" Background="White" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResizeWithGrip" Icon="/gas-burner-custom.png">
+        Title="班级热搜排行榜" Height="768" Width="452" Background="{x:Null}" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResizeWithGrip" Icon="/gas-burner-custom.png" >
     <Window.Resources>
         <WindowChrome x:Key="WindowChromeKey">
-            <WindowChrome.ResizeBorderThickness>
-                <Thickness>0</Thickness>
-            </WindowChrome.ResizeBorderThickness>
+            <WindowChrome.ResizeBorderThickness>0</WindowChrome.ResizeBorderThickness>
         </WindowChrome>
     </Window.Resources>
     <Border CornerRadius="10,10,10,10">
         <Grid Background="White">
-            <Image x:Name="BackImage" Source="/HotSearch.png" VerticalAlignment="Top" Stretch="UniformToFill" />
+
+            <Border CornerRadius="10,10,10,10">
+                <Image x:Name="BackImage" Source="/HotSearch.png" VerticalAlignment="Top" Stretch="UniformToFill" Visibility="Hidden" />
+            </Border>
+
             <materialDesign:Card
 Padding="8"
 Background="White"
 Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
 UniformCornerRadius="6" Margin="15,222,15,20">
                 <materialDesign:Card.Effect>
-                    <DropShadowEffect BlurRadius="22" Color="#FFC9C9C9" ShadowDepth="0">
-
-                    </DropShadowEffect>
+                    <DropShadowEffect BlurRadius="22" Color="#FFC9C9C9" ShadowDepth="0"/>
                 </materialDesign:Card.Effect>
-                <ListBox x:Name="HotSearchList" HorizontalContentAlignment="Stretch" BorderBrush="{x:Null}" Background="{x:Null}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ListBox x:Name="HotSearchList" HorizontalContentAlignment="Stretch" BorderBrush="{x:Null}" Background="{x:Null}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,0,0,45">
                     <Grid x:Name="No1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -55,7 +55,7 @@ UniformCornerRadius="6" Margin="15,222,15,20">
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="1" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E5FF0000" Margin="0,9,0,0"></TextBlock>
+                        <TextBlock Text="1" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E5FF0000" Margin="0,9,0,0"/>
                         <TextBox SelectionBrush="#E5FF0000" GotFocus="OnTextEdit" LostFocus="UnTextEdit" Margin="5,0,5,0" Text="Oi！小鬼，感受到我们七班的火热了吗？" FontFamily="HarmonyOS Sans SC Medium" FontSize="28" Grid.Column="1" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" Padding="0,6,0,4" VerticalAlignment="Top" FontWeight="Bold"/>
                         <materialDesign:PackIcon Kind="FireCircle" Foreground="#E5FF0000" HorizontalAlignment="Center" VerticalAlignment="Top" Height="32" Width="36" Grid.Column="2" Margin="-2,2,0,0" />
                         <TextBlock Grid.Column="2" Margin="0,34,0,0" Text="1145+" VerticalAlignment="Top" FontSize="16" FontFamily="HarmonyOS Sans Medium" HorizontalAlignment="Center"/>
@@ -68,7 +68,7 @@ UniformCornerRadius="6" Margin="15,222,15,20">
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="2" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E5FF5D00" Margin="0,9,0,0"></TextBlock>
+                        <TextBlock Text="2" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E5FF5D00" Margin="0,9,0,0"/>
                         <TextBox SelectionBrush="#E5FF0000" GotFocus="OnTextEdit" LostFocus="UnTextEdit" Margin="5,0,5,0" Text="Oi！小鬼，感受到我们七班的火热了吗？" FontFamily="HarmonyOS Sans SC" FontSize="28" Grid.Column="1" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" Padding="0,6,0,4" VerticalAlignment="Top"/>
                         <materialDesign:PackIcon Kind="FireCircle" Foreground="#E5FF0000" HorizontalAlignment="Center" VerticalAlignment="Top" Height="32" Width="36" Grid.Column="2" Margin="-2,2,0,0" />
                         <TextBlock Grid.Column="2" Margin="0,34,0,0" Text="1145+" VerticalAlignment="Top" FontSize="16" FontFamily="HarmonyOS Sans Medium" HorizontalAlignment="Center"/>
@@ -81,7 +81,7 @@ UniformCornerRadius="6" Margin="15,222,15,20">
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="3" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E5FFAF00" Margin="0,9,0,0"></TextBlock>
+                        <TextBlock Text="3" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E5FFAF00" Margin="0,9,0,0"/>
                         <TextBox SelectionBrush="#E5FF0000" GotFocus="OnTextEdit" LostFocus="UnTextEdit" Margin="5,0,5,0" Text="Oi！小鬼，感受到我们七班的火热了吗？" FontFamily="HarmonyOS Sans SC" FontSize="28" Grid.Column="1" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" Padding="0,6,0,4" VerticalAlignment="Top"/>
                         <materialDesign:PackIcon Kind="FireCircle" Foreground="#E5FF0000" HorizontalAlignment="Center" VerticalAlignment="Top" Height="32" Width="36" Grid.Column="2" Margin="-2,2,0,0" />
                         <TextBlock Grid.Column="2" Margin="0,34,0,0" Text="1145+" VerticalAlignment="Top" FontSize="16" FontFamily="HarmonyOS Sans Medium" HorizontalAlignment="Center"/>
@@ -94,7 +94,7 @@ UniformCornerRadius="6" Margin="15,222,15,20">
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="4" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E57F7F7F" Margin="0,9,0,0"></TextBlock>
+                        <TextBlock Text="4" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E57F7F7F" Margin="0,9,0,0"/>
                         <TextBox SelectionBrush="#E5FF0000" GotFocus="OnTextEdit" LostFocus="UnTextEdit" Margin="5,0,5,0" Text="Oi！小鬼，感受到我们七班的火热了吗？" FontFamily="HarmonyOS Sans SC Light" FontSize="28" Grid.Column="1" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" Padding="0,6,0,4" VerticalAlignment="Top"/>
                         <materialDesign:PackIcon Kind="FireCircle" Foreground="#E5FF0000" HorizontalAlignment="Center" VerticalAlignment="Top" Height="32" Width="36" Grid.Column="2" Margin="-2,2,0,0" />
                         <TextBlock Grid.Column="2" Margin="0,34,0,0" Text="1145+" VerticalAlignment="Top" FontSize="16" FontFamily="HarmonyOS Sans Medium" HorizontalAlignment="Center"/>
@@ -107,7 +107,7 @@ UniformCornerRadius="6" Margin="15,222,15,20">
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="5" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E57F7F7F" Margin="0,9,0,0"></TextBlock>
+                        <TextBlock Text="5" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E57F7F7F" Margin="0,9,0,0"/>
                         <TextBox SelectionBrush="#E5FF0000" GotFocus="OnTextEdit" LostFocus="UnTextEdit" Margin="5,0,5,0" Text="Oi！小鬼，感受到我们七班的火热了吗？" FontFamily="HarmonyOS Sans SC Light" FontSize="28" Grid.Column="1" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" Padding="0,6,0,4" VerticalAlignment="Top"/>
                         <materialDesign:PackIcon Kind="FireCircle" Foreground="#E5FF0000" HorizontalAlignment="Center" VerticalAlignment="Top" Height="32" Width="36" Grid.Column="2" Margin="-2,2,0,0" />
                         <TextBlock Grid.Column="2" Margin="0,34,0,0" Text="1145+" VerticalAlignment="Top" FontSize="16" FontFamily="HarmonyOS Sans Medium" HorizontalAlignment="Center"/>
@@ -120,7 +120,7 @@ UniformCornerRadius="6" Margin="15,222,15,20">
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="6" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E57F7F7F" Margin="0,9,0,0"></TextBlock>
+                        <TextBlock Text="6" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E57F7F7F" Margin="0,9,0,0"/>
                         <TextBox SelectionBrush="#E5FF0000" GotFocus="OnTextEdit" LostFocus="UnTextEdit" Margin="5,0,5,0" Text="Oi！小鬼，感受到我们七班的火热了吗？" FontFamily="HarmonyOS Sans SC Light" FontSize="28" Grid.Column="1" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" Padding="0,6,0,4" VerticalAlignment="Top"/>
                         <materialDesign:PackIcon Kind="FireCircle" Foreground="#E5FF0000" HorizontalAlignment="Center" VerticalAlignment="Top" Height="32" Width="36" Grid.Column="2" Margin="-2,2,0,0" />
                         <TextBlock Grid.Column="2" Margin="0,34,0,0" Text="1145+" VerticalAlignment="Top" FontSize="16" FontFamily="HarmonyOS Sans Medium" HorizontalAlignment="Center"/>
@@ -129,16 +129,75 @@ UniformCornerRadius="6" Margin="15,222,15,20">
 
                 </ListBox>
             </materialDesign:Card>
+            <ToggleButton x:Name="MenuToggleButton"
+AutomationProperties.Name="HamburgerToggleButton"
+Click="MenuToggleButton_OnClick"
+IsChecked="False"
+Style="{StaticResource MaterialDesignHamburgerToggleButton}" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF565656" Margin="30,15,0,31" >
+                <ToggleButton.Background>
+                    <SolidColorBrush Color="White" Opacity="0.005"/>
+                </ToggleButton.Background>
+            </ToggleButton>
+
+            <materialDesign:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding IsChecked, ElementName=MenuToggleButton}" LeftDrawerBackground="#FFF1F1F1">
+                <materialDesign:DrawerHost.LeftDrawerContent >
+                    <DockPanel x:Name="drawerPanel" MinWidth="220" Background="#FFFEFDFE" >
+                        <StackPanel x:Name="HeadPanel" DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Left">
+                            <ToggleButton Margin="16"
+            HorizontalAlignment="Left"
+            DockPanel.Dock="Top"
+            IsChecked="{Binding IsChecked, ElementName=MenuToggleButton, Mode=TwoWay}"
+            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+
+                            <TextBlock x:Name="HotTitleText" Text="班级热搜字啊" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,0,25,0" FontSize="24" FontFamily="HarmonyOS Sans SC Black" FontWeight="Bold" Foreground="#FF1D1D1D"/>
+                        </StackPanel>
+
+                        <TextBox x:Name="DemoItemsSearchBox"
+       Width="200"
+       Margin="16,4"
+       materialDesign:HintAssist.Hint="Search"
+       materialDesign:TextFieldAssist.DecorationVisibility="Collapsed"
+       materialDesign:TextFieldAssist.HasClearButton="True"
+       DockPanel.Dock="Top"
+       Style="{StaticResource MaterialDesignOutlinedTextBox}"
+       Text="{Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged}" CaretBrush="#FF0063D9" SelectionBrush="#FF3A90FF" Visibility="Collapsed" />
+
+                        <Image x:Name="HeadImage" Source="/HotSearchHead.png" MaxHeight="428"  DockPanel.Dock="Top" Margin="0,25,0,0" VerticalAlignment="Top"/>
+
+                        <ListBox x:Name="DemoItemsListBox"
+       Margin="0,16,0,10"
+       AutomationProperties.Name="DemoPagesListBox"
+       PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp"
+       SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
+       SelectedIndex="0" VerticalAlignment="Bottom">
+                            <ListBox.Resources>
+                                <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource MaterialDesignScrollBarMinimal}" />
+                            </ListBox.Resources>
+                            <ListBox.Style>
+                                <StaticResource ResourceKey="MaterialDesignNavigationPrimaryListBox"/>
+                            </ListBox.Style>
+                            <materialDesign:TreeListViewItem x:Name="AddHotItem" Content="➕ 添加热搜词条" Cursor="Hand" IsSelected="False"/>
+                            <Separator Margin="0,0,0,0" Background="Black" VerticalAlignment="Top"/>
+                            <materialDesign:TreeListViewItem x:Name="HotSettingsButton" Cursor="Hand" Content="⚙️ 设置" Margin="4,0,4,2"/>
+                            <materialDesign:TreeListViewItem x:Name="AboutHot" Cursor="Hand" Content="ℹ️ 关于"/>
+                            <Separator Margin="0,0,0,0" Background="Black"/>
+                            <materialDesign:TreeListViewItem x:Name="CloseHot" Content="✖️ 关闭" Margin="4,0,4,2"/>
+                        </ListBox>
+                    </DockPanel>
+                </materialDesign:DrawerHost.LeftDrawerContent>
+            </materialDesign:DrawerHost>
+
             <materialDesign:DialogHost x:Name="MessageDialog" 
                              Identifier="Msg"
-                                 DialogContentUniformCornerRadius="10"
+                                 DialogContentUniformCornerRadius="18"
                                  DialogTheme="Inherit">
                 <materialDesign:DialogHost.DialogContent>
                     <StackPanel>
                         <TextBlock x:Name="DialogText" Text="Default text" Margin="16" FontFamily="HarmonyOS Sans SC Medium" FontSize="16" />
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="16">
-                            <Button Content="更改" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsDefault="True" CommandParameter="True" Style="{StaticResource MaterialDesignFlatButton}"/>
-                            <Button Content="取消" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsCancel="True" CommandParameter="False" Style="{StaticResource MaterialDesignFlatButton}"/>
+                        <StackPanel Orientation="Horizontal" Margin="16" HorizontalAlignment="Right">
+                            <CheckBox x:Name="Retain" Content="保留热度" Style="{StaticResource MaterialDesignFilterChipCheckBox}" IsChecked="False" Background="#FF673AB7" Foreground="#FF673AB7" Visibility="Collapsed"/>
+                            <Button x:Name="MessageGood" Content="更改" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsDefault="True" CommandParameter="True" Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Right" Margin="15,0,0,0"/>
+                            <Button x:Name="MessageBad" Content="取消" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsCancel="True" CommandParameter="False" Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Right"/>
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:DialogHost.DialogContent>
@@ -146,13 +205,13 @@ UniformCornerRadius="6" Margin="15,222,15,20">
 
             <materialDesign:DialogHost x:Name="SingleDialog" 
                  Identifier="single"
-                     DialogContentUniformCornerRadius="10"
+                     DialogContentUniformCornerRadius="18"
                      DialogTheme="Inherit">
                 <materialDesign:DialogHost.DialogContent>
                     <StackPanel>
                         <TextBlock x:Name="singleText" Text="Default text" Margin="16" FontFamily="HarmonyOS Sans SC Medium" FontSize="16" />
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="16">
-                            <Button Content="那行" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsDefault="True" CommandParameter="True" Style="{StaticResource MaterialDesignFlatButton}"/>
+                            <Button Content="好" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsDefault="True" CommandParameter="True" Style="{StaticResource MaterialDesignFlatButton}"/>
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:DialogHost.DialogContent>
@@ -170,6 +229,44 @@ UniformCornerRadius="6" Margin="15,222,15,20">
   Style="{StaticResource MaterialDesignCircularProgressBar}"
   Value="35" Margin="16,0,0,0" />
                             <TextBlock x:Name="LoadingText" Text="正在更新排行榜……" Margin="16" FontFamily="HarmonyOS Sans SC Medium" FontSize="16" />
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:DialogHost.DialogContent>
+            </materialDesign:DialogHost>
+
+            <materialDesign:DialogHost x:Name="AddDialog" 
+               Identifier="Add"
+                   DialogContentUniformCornerRadius="18"
+                   DialogTheme="Inherit"
+                                       >
+                <materialDesign:DialogHost.DialogContent>
+                    <StackPanel Margin="16">
+                        <TextBlock x:Name="AddTextTip" Text="添加新的热点" FontSize="16" FontWeight="Bold" FontFamily="HarmonyOS Sans SC Medium" />
+
+                        <TextBox x:Name="NewHot"
+     Margin="0,8,0,0"
+     HorizontalAlignment="Stretch" FontSize="14" MinWidth="200"/>
+
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button Margin="0,8,8,0"
+      Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+      Content="完成"
+      IsDefault="True"
+      Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.CommandParameter>
+                                    <system:Boolean>True</system:Boolean>
+                                </Button.CommandParameter>
+                            </Button>
+
+                            <Button Margin="0,8,8,0"
+      Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+      Content="取消"
+      IsCancel="True"
+      Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button.CommandParameter>
+                                    <system:Boolean>False</system:Boolean>
+                                </Button.CommandParameter>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:DialogHost.DialogContent>

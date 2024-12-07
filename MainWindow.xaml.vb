@@ -1,15 +1,10 @@
 ﻿Imports System.IO
-Imports System.Windows.Forms
+Imports System.Text.RegularExpressions
+Imports System.Windows.Media.Animation
+Imports System.Windows.Threading
 Imports MaterialDesignThemes.Wpf
 Imports MaterialDesignThemes.Wpf.Theme
 Imports Newtonsoft.Json
-Imports System.Linq
-Imports System.Text.RegularExpressions
-Imports System.Windows.Threading
-Imports System.Xml
-Imports System.ComponentModel
-Imports ControlzEx.Standard
-Imports System.Windows.Media.Animation
 Class MainWindow
     Public Shared AppPath = AppContext.BaseDirectory()
     'Private hot_value As List(Of Integer) = New List(Of Integer)
@@ -25,6 +20,11 @@ Class MainWindow
     Private old_hot_text As String
     Dim winLeft As Double
     Dim winTop As Double
+
+    Public TextEdited As Boolean = False
+
+    Dim w2 As New Window2
+    Dim w1 As New Window1
 
     Private Sub ResetTimer()
         If saveTimer.IsEnabled Then
@@ -54,14 +54,20 @@ Class MainWindow
         saveTimer.Stop()
         DialogHost.Show(LoadingDialog.DialogContent, "Loading")
         Await Task.Delay(500) '缓冲
-        Dim hot_database As String
+        Dim hot_database As String = String.Empty
+        hot_value = hot_value.OrderByDescending(Function(pair) pair.Value).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
         For Each kvp In hot_value
-            hot_database = hot_database & ($"[""{kvp.Key}"", {kvp.Value}]") & Environment.NewLine()
+            hot_database &= $"[""{kvp.Key}"", {kvp.Value}]{Environment.NewLine}"  ' 进行字符串拼接
         Next
-        File.WriteAllText(AppPath & "\hot_content.Sr", hot_database)
+
+        Try
+            File.WriteAllText(AppPath & "\hot_content.Sr", hot_database)
+        Catch ex As Exception
+            MsgBox(ex.Message())
+        End Try
 
         read_hot()
-        AddControlsToListBox(6)
+        AddControlsToListBox(10)
         GC.Collect()
         GC.WaitForFullGCComplete()
         DialogHost.Close("Loading")
@@ -150,38 +156,54 @@ Class MainWindow
     End Sub
 
     Private Async Sub MainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        LoadingText.Text = "正在加载界面……"
         HotSearchList.Items.Clear()
+        LoadingText.Text = "正在加载界面……"
         Me.Dispatcher.BeginInvoke(Sub()
                                       DialogHost.Show(LoadingDialog.DialogContent, "Loading")
                                   End Sub)
         Await Task.Delay(500)
 
+        If Not File.Exists(AppPath & "\hot_content.Sr") Then
+            File.Create(AppPath & "\hot_content.Sr")
+        End If
+
+        If Not File.Exists(AppPath & "\hot_settings.Sr") Then
+            Dim settingsString As String = "False
+Normal
+Normal
+班级热搜
+True"
+            File.WriteAllText(AppPath & "\hot_settings.Sr", settingsString)
+        End If
+
         Application.Current.Dispatcher.Invoke(Sub()
                                                   If File.Exists(Path.Combine(AppPath, "Window.ini")) Then
                                                       UpdateWindowStyle()
                                                   End If
-                                                  BackImage.Source = New BitmapImage(New Uri(Path.Combine(AppPath, "HotSearch.png")))
+                                                  'BackImage.Source = New BitmapImage(New Uri(Path.Combine(AppPath, "HotSearch.png")))
+                                                  ' HeadImage.Source = New BitmapImage(New Uri(Path.Combine(AppPath, "HotSearchHead.png")))
+                                                  Settings.Read()
+                                                  ApplySettings()
+                                                  BackImage.Visibility = Visibility.Visible
                                                   read_hot()
-                                                  HotSearchList.Items.Clear()
-                                                  AddControlsToListBox(6)
+                                                  AddControlsToListBox(10)
                                               End Sub)
 
         LoadingText.Text = "正在更新排行榜……"
-        Dim menu As ContextMenu = New ContextMenu
-        Dim refresh As MenuItem = New MenuItem() With {
-            .Header = New Run() With {
-            .Text = "关闭",
-            .FontStretch = FontStretches.Medium,
-            .FontFamily = New FontFamily("HarmonyOS Sans SC"),
-            .FontSize = 16},
-            .Icon = New PackIcon() With {
-            .Kind = PackIconKind.CloseCircle,
-            .Width = 16,
-            .Height = 16}}
-        AddHandler refresh.Click, AddressOf CloseWindow_Click
-        menu.Items.Add(refresh)
-        Me.ContextMenu = menu
+        'Dim menu As ContextMenu = New ContextMenu
+        'Dim refresh As MenuItem = New MenuItem() With {
+        '    .Header = New Run() With {
+        '    .Text = "关闭",
+        '    .FontStretch = FontStretches.Medium,
+        '    .FontFamily = New FontFamily("HarmonyOS Sans SC"),
+        '    .FontSize = 16},
+        '    .Icon = New PackIcon() With {
+        '    .Kind = PackIconKind.CloseCircle,
+        '    .Width = 16,
+        '    .Height = 16}}
+        'AddHandler refresh.Click, AddressOf CloseWindow_Click
+        'menu.Items.Add(refresh)
+        'Me.ContextMenu = menu
 
         Await Task.Delay(500)
         DialogHost.Close("Loading")
@@ -217,18 +239,28 @@ Class MainWindow
     End Sub
     Private Sub OnTextEdit(sender As Object, e As RoutedEventArgs)
         Dim textBox As Controls.TextBox = DirectCast(sender, Controls.TextBox)
+        textBox.Focus()
         'old_hot_text = textBox.Text()
+        textBox.Focus()
         textBox.TextWrapping = TextWrapping.WrapWithOverflow
+        textBox.Focus()
+    End Sub
+    Private Sub InTextEditing()
+        TextEdited = True
     End Sub
     Private Async Sub UnTextEdit(sender As Object, e As RoutedEventArgs)
+        If Not TextEdited Then
+            Return
+        End If
+        TextEdited = False
         Dim textBox As Controls.TextBox = DirectCast(sender, Controls.TextBox)
         Dim keys As List(Of String) = hot_value.Keys.ToList()
         old_hot_text = keys(Convert.ToInt32(Regex.Match(textBox.Name(), "\d+$").Value())).ToString()
 
         If old_hot_text <> textBox.Text Then
             If hot_value.ContainsKey(textBox.Text()) Then
-                textBox.Text = old_hot_text
                 singleText.Text = "排行榜上不能有两个相同的热点。" & vbCrLf & $"""{textBox.Text}"""
+                textBox.Text = old_hot_text
                 DialogHost.Show(SingleDialog.DialogContent, "single")
             Else
                 Dim match As Match = Regex.Match(textBox.Name(), "\d+$")
@@ -254,13 +286,27 @@ Class MainWindow
                     save_hot()
                 Else
                     DialogText.Text = "更改排行榜内容将会清空当前条目的热度， " & vbCrLf & "是否继续？"
+                    MessageGood.Content = "更改"
+                    MessageBad.Content = "取消"
+                    If Convert.ToBoolean(Settings.settings(0)) Then
+                        Retain.Visibility = Visibility.Visible
+                    End If
                     Dim question_to_save_dialog = Await DialogHost.Show(MessageDialog.DialogContent, "Msg")
-                    If question_to_save_dialog IsNot Nothing And question_to_save_dialog.ToString() = "True" Then
+                    Retain.Visibility = Visibility.Collapsed
 
-                        hot_value(newKey) = 0
+                    If question_to_save_dialog IsNot Nothing And question_to_save_dialog.ToString() = "True" Then
+                        If Retain.IsChecked Then
+                            hot_value(newKey) = hot_value(oldKey)
+                            Retain.IsChecked = False
+                        Else
+                            hot_value(newKey) = 0
+                        End If
+                        hot_value = hot_value.OrderByDescending(Function(pair) pair.Value).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+
                         If oldKey IsNot Nothing Then
                             hot_value.Remove(oldKey)
                         End If
+                        hot_value = hot_value.OrderByDescending(Function(pair) pair.Value).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
 
                         Console.WriteLine("ToSave")
                         save_hot()
@@ -320,7 +366,7 @@ Class MainWindow
         Dim pi As PackIcon = DirectCast(sender, PackIcon)
         Dim match As Match = Regex.Match(pi.Name(), "\d+$")
         ' 指定索引和新值
-        Dim indexToModify As Integer = match.Value() ' 我们要修改的索引
+        Dim indexToModify As Integer = match.Value() ' 修改的索引
         Console.WriteLine(indexToModify)
         If indexToModify >= 0 AndAlso indexToModify < hot_value.Count Then
             ' 获取键列表
@@ -377,6 +423,7 @@ Class MainWindow
         HotSearchList.Items.Clear(）
 
         Dim menu As ContextMenu = New ContextMenu
+
         Dim refresh As MenuItem = New MenuItem() With {
             .Header = New Run() With {
             .Text = "刷新排行榜",
@@ -390,7 +437,24 @@ Class MainWindow
         AddHandler refresh.Click, Sub()
                                       save_hot()
                                   End Sub
+
+        Dim del As MenuItem = New MenuItem() With {
+            .Header = New Run() With {
+                .Text = "删除此热点",
+                .FontStretch = FontStretches.Medium,
+                .FontFamily = New FontFamily("HarmonyOS Sans SC"),
+                .FontSize = 16
+            },
+            .Icon = New PackIcon() With {
+                .Kind = PackIconKind.DeleteSweepOutline,
+                .Width = 16,
+                .Height = 16
+            }
+        }
+        AddHandler del.Click, AddressOf DelHotItem
+
         menu.Items.Add(refresh)
+        menu.Items.Add(del)
 
         While index <= hot_items
             Console.WriteLine(index)
@@ -471,6 +535,7 @@ Class MainWindow
             End Select
 
             AddHandler hotText0.GotFocus, AddressOf OnTextEdit ' 加入事件处理
+            AddHandler hotText0.TextChanged, AddressOf InTextEditing ' 加入事件处理
             AddHandler hotText0.LostFocus, AddressOf UnTextEdit ' 加入事件处理
             Grid.SetColumn(hotText0, 1) ' 设置在第 1 列
 
@@ -514,6 +579,8 @@ Class MainWindow
                 Dim valueAtIndex = hot_value(keyAtIndex)
                 hotText0.Text = keyAtIndex
                 hot0.Text = valueAtIndex.ToString()
+            Else
+                Exit While
             End If
 
             ' 将控件添加到 Grid
@@ -546,13 +613,21 @@ Class MainWindow
 
     End Sub
 
-    Private Sub CloseWindow_Click(sender As Object, e As RoutedEventArgs)
-        Close()
-        End
+    Private Sub CloseWindow_Click()
+        Dim CloseHotAni As New DoubleAnimation()
+        CloseHotAni.From = 1
+        CloseHotAni.To = 0
+        CloseHotAni.Duration = New Duration(TimeSpan.FromSeconds(0.5))
+
+        AddHandler CloseHotAni.Completed, Sub()
+                                              Close()
+                                          End Sub
+
+        BeginAnimation(window.OpacityProperty, CloseHotAni)
     End Sub
 
     Private Sub MainWindow_MouseLeftButtonUp(sender As Object, e As MouseButtonEventArgs) Handles Me.MouseLeftButtonUp
-        If winTop <> Me.Top OrElse winLeft <> Me.Left Then
+        If (winTop <> Me.Top OrElse winLeft <> Me.Left) And Convert.ToBoolean(Settings.settings(4)) Then
             winTop = Me.Top
             winLeft = Me.Left
             Dim winfo = $"{Me.Left().ToString()}*{Me.Top().ToString()}*{Me.ActualWidth().ToString()}*{Me.ActualHeight().ToString()}"
@@ -560,5 +635,167 @@ Class MainWindow
             Console.WriteLine(winfo)
             File.WriteAllText(Path.Combine(AppPath, "Window.ini"), winfo)
         End If
+    End Sub
+
+    Private Sub MenuToggleButton_OnClick()
+        DemoItemsSearchBox.Focus()
+    End Sub
+
+    Private Sub UIElement_OnPreviewMouseLeftButtonUp()
+        Dim dependencyObject As DependencyObject = TryCast(Mouse.Captured, DependencyObject)
+
+        While dependencyObject IsNot Nothing
+            If TypeOf dependencyObject Is System.Windows.Controls.Primitives.ScrollBar Then
+                Return
+            End If
+            dependencyObject = VisualTreeHelper.GetParent(dependencyObject)
+        End While
+
+        MenuToggleButton.IsChecked = False
+    End Sub
+
+    Private Sub DemoItemsListBox_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles DemoItemsListBox.SelectionChanged
+        DemoItemsListBox.SelectedIndex = -1
+    End Sub
+
+    Private Sub CloseHot_Selected(sender As Object, e As RoutedEventArgs) Handles CloseHot.Selected
+        CloseWindow_Click()
+    End Sub
+
+    Private Sub ApplySettings()
+        If Settings.settings.Length < 5 Then
+            MessageBox.Show("发生错误，设置文件可能已经损坏:" & vbCrLf & "文件中的索引长度小于指定长度。", "错误", MessageBoxButton.OK, MessageBoxImage.Error)
+
+            Dim settingsString As String = "False
+Normal
+Normal
+班级热搜
+True"
+            File.WriteAllText(AppPath & "\hot_settings.Sr", settingsString)
+            Settings.Read()
+        End If
+
+        Me.Title = Settings.settings(3)
+        HotTitleText.Text = Settings.settings(3)
+        If Settings.settings(1) <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearch.png")) Then
+            BackImage.Source = New BitmapImage(New Uri(Settings.settings(1)))
+        Else
+            BackImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearch.png"))
+        End If
+        If Settings.settings(2) <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearchHead.png")) Then
+            HeadImage.Source = New BitmapImage(New Uri(Settings.settings(2)))
+        Else
+            HeadImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearchHead.png"))
+        End If
+
+        HeadPanel.InvalidateVisual()
+        HeadPanel.UpdateLayout()
+
+        Me.Dispatcher.BeginInvoke(Sub()
+                                      If HeadPanel.ActualWidth < drawerPanel.MinWidth Then
+                                          HeadImage.Width = drawerPanel.MinWidth
+                                      Else
+                                          HeadImage.Width = HeadPanel.ActualWidth
+                                      End If
+                                  End Sub)
+
+    End Sub
+
+    Private Async Sub AddHotItem_Selected(sender As Object, e As RoutedEventArgs) Handles AddHotItem.Selected
+        If Not MenuToggleButton.IsChecked Then
+            Return
+        End If
+        If hot_value.Count() >= 11 Then
+            singleText.Text = "排行榜上最多只能有 11 条热点。" & vbCrLf & "ヽ(゜▽゜　)"
+            DialogHost.Show(SingleDialog.DialogContent, "single")
+        Else
+            AddTextTip.Text = "添加新的热点"
+            Dim YesOrNo = Await DialogHost.Show(AddDialog.DialogContent, "Add")
+            If YesOrNo Then
+                If hot_value.ContainsKey(NewHot.Text()) Then
+                    singleText.Text = "排行榜上不能有两个相同的热点。" & vbCrLf & $"""{NewHot.Text()}"""
+                    DialogHost.Show(SingleDialog.DialogContent, "single")
+                Else
+                    hot_value.Add(NewHot.Text(), 0)
+                    save_hot()
+                    NewHot.Text = ""
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Async Sub DelHotItem(sender As Object, e As RoutedEventArgs)
+
+        ' 获取当前点击的 MenuItem
+        Dim menuItem As MenuItem = CType(sender, MenuItem)
+
+        ' 获取关联的 ContextMenu
+        Dim contextMenu As ContextMenu = CType(menuItem.Parent, ContextMenu)
+
+        ' 通过 ContextMenu 的 PlacementTarget 获取 PackIcon
+        Dim packIcon
+        Try
+            packIcon = CType(contextMenu.PlacementTarget, PackIcon)
+        Catch ex As Exception
+            packIcon = CType(contextMenu.PlacementTarget, TextBlock)
+        End Try
+
+        If packIcon IsNot Nothing Then
+            ' 获取 PackIcon 的 Name
+            Dim packIconName As String = packIcon.Name
+
+            Dim keys As List(Of String) = hot_value.Keys.ToList()
+            Dim indexToDel As Int32 = Convert.ToInt32(Regex.Match(packIconName, "\d+$").Value())
+            old_hot_text = keys(indexToDel).ToString()
+
+            DialogText.Text = "确实要删除这个热点？ " & vbCrLf & $"""{old_hot_text}"""
+            MessageGood.Content = "确认"
+            MessageBad.Content = "取消"
+
+            Dim ConfirmToDel = Await DialogHost.Show(MessageDialog.DialogContent, "Msg")
+
+            If ConfirmToDel IsNot Nothing And ConfirmToDel.ToString() = "True" Then
+                Dim keyToDel As String = keys(indexToDel)
+
+                hot_value.Remove(keyToDel)
+
+                save_hot()
+            End If
+        End If
+    End Sub
+
+    Private Sub AboutHot_Selected(sender As Object, e As RoutedEventArgs) Handles AboutHot.Selected
+        If w1.IsOpen Then
+            w1.Activate()
+        Else
+            Try
+                w1.Show()
+            Catch ex As Exception
+                w1 = New Window1
+                w1.Show()
+            End Try
+
+        End If
+    End Sub
+
+    Private Sub HotSettingsButton_Selected(sender As Object, e As RoutedEventArgs) Handles HotSettingsButton.Selected
+        If w2.IsOpen Then
+            w2.Activate()
+        Else
+            Try
+                AddHandler w2.WindowClosed, AddressOf ApplySettings
+                w2.Show()
+            Catch ex As Exception
+                w2 = New Window2
+                AddHandler w2.WindowClosed, AddressOf ApplySettings
+                w2.Show()
+            End Try
+
+        End If
+
+    End Sub
+
+    Private Sub DemoItemsListBox_LostMouseCapture(sender As Object, e As MouseEventArgs) Handles DemoItemsListBox.LostMouseCapture
+
     End Sub
 End Class
