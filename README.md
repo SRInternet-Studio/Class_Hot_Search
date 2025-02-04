@@ -11,7 +11,7 @@
 
 #### 📺[观看介绍视频](https://www.bilibili.com/video/BV1SoiyYuEtt/) | [ 加入官方QQ群](https://qm.qq.com/q/f3QGDkdp6M)
 
-#### [🌐 思锐云盘 ](https://disk.sr-studio.top/Class_Hot_Search%20%E7%8F%AD%E7%BA%A7%E7%83%AD%E6%90%9C%E5%B7%A5%E5%85%B7/Class_Hot_Search-v1.0.0.zip/)｜[💖 支持我们 ](https://afdian.com/a/srinternet)｜[📝 反馈问题](https://github.com/SRInternet-Studio/Class_Hot_Search/issues)
+#### [🌐 产品中心 ](qpp.sr-studio.cn)｜[💖 支持我们 ](https://afdian.com/a/srinternet)｜[📝 反馈问题](https://github.com/SRInternet-Studio/Class_Hot_Search/issues)
 
 ###### [在 Bilibili 上关注我们，时刻了解最新发明 →](https://space.bilibili.com/1969160969)
 
