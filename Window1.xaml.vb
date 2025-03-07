@@ -1,6 +1,9 @@
-﻿Public Class Window1
+﻿Imports MaterialDesignThemes.Wpf
+
+Public Class Window1
 
     Public Property IsOpen As Boolean = False
+    Private ReadOnly paletteHelper As New PaletteHelper()
 
     Private Sub bilibili_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles bilibili.MouseLeftButtonDown
         Dim startInfo As New ProcessStartInfo()
@@ -52,5 +55,21 @@
 
     Private Sub Window1_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         IsOpen = True
+
+        AddHandler CurrentEvents.ThemeChangedEvent, AddressOf OnThemeChanged
+        OnThemeChanged()
+
+        ProductionInfoText.Text = $"版本：{UpdateChecker.versionParts}。基于 Material Design 3 设计, .NET {Application.environMajorVersion} 平台构建。"
+    End Sub
+
+    Private Sub OnThemeChanged()
+        Dim AppPath = AppContext.BaseDirectory()
+        If paletteHelper.GetTheme().GetBaseTheme() = BaseTheme.Dark Then
+            tiktok.Source = New BitmapImage(New Uri(IO.Path.Combine(AppPath, "assets/Tiktok_round_dark.png")))
+            bilibili.Source = New BitmapImage(New Uri(IO.Path.Combine(AppPath, "assets/bilibili_round_dark.png")))
+        Else
+            tiktok.Source = New BitmapImage(New Uri(IO.Path.Combine(AppPath, "assets/Tiktok_round.png")))
+            bilibili.Source = New BitmapImage(New Uri(IO.Path.Combine(AppPath, "assets/bilibili_round.png")))
+        End If
     End Sub
 End Class

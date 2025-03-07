@@ -2,24 +2,29 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
     <RootNamespace>Class_Hot_Search</RootNamespace>
-    <UseWPF>true</UseWPF>
+    <UseWPF>True</UseWPF>
 	  <OutputType>WinExe</OutputType>
 	  <Title>班级热搜排行榜</Title>
 	  <Authors>思锐工作室 SR Studio</Authors>
-	  <Copyright>Copyright ©️ 2024 思锐工作室</Copyright>
+	  <Copyright>Copyright ©️ 2025 思锐工作室</Copyright>
 	  <Description>适用于班级中投票或热搜统计的小工具。</Description>
 	  <ApplicationIcon>gas-burner-custom.ico</ApplicationIcon>
 	  <PackageIcon>gas-burner-custom.png</PackageIcon>
+	  <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+	  <AssemblyVersion>1.2.0</AssemblyVersion>
+	  <FileVersion>1.2.0</FileVersion>
+	  <InformationalVersion>1.2.0</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="bilibili round.png" />
     <None Remove="gas-burner-custom.png" />
+    <None Remove="HotSearch.Dark.png" />
     <None Remove="HotSearch.png" />
+    <None Remove="HotSearchHead.Dark.png" />
     <None Remove="HotSearchHead.png" />
-    <None Remove="qq-brands-solid.png" />
+    <None Remove="LICENSE.txt" />
     <None Remove="sr.png" />
     <None Remove="Tiktok_round.png" />
   </ItemGroup>
@@ -29,16 +34,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="HotSearchHead.Dark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HotSearch.Dark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="HotSearch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="HotSearchHead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="bilibili round.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="qq-brands-solid.png">
+    <Resource Include="assets\bilibili_round.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="sr.png">
@@ -66,20 +80,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="3.1.1-ci795" />
-    <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci795" />
-    <PackageReference Include="MaterialDesignThemes.MahApps" Version="3.1.1-ci795" />
+    <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="5.2.1" />
+    <PackageReference Include="MdXaml" Version="1.27.0" />
+    <PackageReference Include="MdXaml.Full" Version="1.27.0" />
+    <PackageReference Include="MdXaml.Plugins" Version="1.27.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="gas-burner-custom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Tiktok_round.png">
+    <Resource Include="assets\Tiktok_round.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /e /r /y $(ProjectDir)assets $(SolutionDir)$(OutputPath)assets\" />
+  </Target>
 
 </Project>

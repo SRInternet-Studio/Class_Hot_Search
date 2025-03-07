@@ -8,8 +8,8 @@ xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Window2"
         mc:Ignorable="d"
-        Title="班级热搜排行榜" Height="450" Width="800" Icon="/gas-burner-custom.png" WindowStartupLocation="CenterScreen" MinWidth="622" MinHeight="431">
-    <Grid Margin="-1,0,1,0">
+        Title="班级热搜排行榜" Height="600" Width="800" Icon="/gas-burner-custom.png" WindowStartupLocation="CenterScreen" MinWidth="622" MinHeight="431" Background="{x:Null}">
+    <Grid Background="{DynamicResource MaterialDesign.Brush.Primary.Background}">
         <materialDesign:ColorZone x:Name="colorZone" Padding="16"
                               materialDesign:ElevationAssist.Elevation="Dp4"
                               Mode="PrimaryMid" Background="#FFFF6565" Height="57"
@@ -33,7 +33,7 @@ Value="0" Foreground="White" Width="22" Height="21" Margin="0,0,2,2" Visibility=
                    VerticalAlignment="Center"
                    AutomationProperties.Name="班级热搜"
                    FontSize="21"
-                   FontFamily="HarmonyOS Sans SC Medium" RenderTransformOrigin="0.5,0.5" >
+                   FontFamily="HarmonyOS Sans SC Medium" RenderTransformOrigin="0.5,0.5" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Background}" >
                     <TextBlock.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -44,30 +44,126 @@ Value="0" Foreground="White" Width="22" Height="21" Margin="0,0,2,2" Visibility=
                     </TextBlock.RenderTransform><Run Language="zh-cn" Text="设置"/></TextBlock>
             </DockPanel>
         </materialDesign:ColorZone>
-        <ScrollViewer Margin="0,60,0,45">
+        <ScrollViewer Margin="0,60,0,88" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" PanningMode="VerticalOnly">
             <Grid>
-                <TextBlock TextWrapping="Wrap" Text="允许保留热度" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,15,0,0"/>
-                <TextBlock TextWrapping="Wrap" Text="在编辑已有的热点内容后，允许保留其原有热度。" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,45,0,0" Foreground="#FF151515"/>
-                <ToggleButton x:Name="NoChangeHot" Content="✖️" HorizontalAlignment="Right" Margin="0,25,35,0" VerticalAlignment="Top"/>
-                <Separator HorizontalContentAlignment="Stretch" Background="Black" Margin="27,76,27,2" VerticalAlignment="Top"/>
-                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,89,0,0"><Run Language="zh-cn" Text="选择背景"/></TextBlock>
-                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,119,0,0" Foreground="#FF151515"><Run Language="zh-cn" Text="一张将在排行榜界面展示的背景图片，推荐竖版。"/></TextBlock>
-                <Button x:Name="BackgroungCustom" Content="选取" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,100,35,0" Background="#FFFF6565" BorderBrush="#FFFF6060"/>
-                <Button x:Name="BackgroungNormal" Content="默认" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,100,120,0" Background="#FFFF6565" BorderBrush="#FFFF6060" HorizontalContentAlignment="Center"/>
-                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,149,0,0"><Run Language="zh-cn" Text="选择头图"/></TextBlock>
-                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,179,0,0" Foreground="#FF151515"><Run Text="一张将在"/><Run Language="zh-cn" Text="侧边菜单栏顶部展示的封面"/><Run Text="，推荐"/><Run Language="zh-cn" Text="横版"/><Run Text="。"/></TextBlock>
-                <Button x:Name="HeadCustom" Content="选取" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,159,35,0" Background="#FFFF6565" BorderBrush="#FFFF6060"/>
-                <Button x:Name="HeadNormal" Content="默认" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,159,120,0" Background="#FFFF6565" BorderBrush="#FFFF6060"/>
-                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,209,0,0"><Run Language="zh-cn" Text="自定义标题"/></TextBlock>
-                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,239,0,0" Foreground="#FF151515"><Run Language="zh-cn" Text="标题将会作为排行榜窗口标题和侧边栏底部标题。"/></TextBlock>
-                <TextBox x:Name="TitleBox" HorizontalAlignment="Right" MaxLength="8" Margin="0,220,35,0" TextWrapping="Wrap" Text="班级热搜" VerticalAlignment="Top" Width="145" FontSize="14"/>
-                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,265,0,0" Text="记录窗口位置"/>
-                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,295,0,0" Foreground="#FF151515"><Run Text="打开后，将在下次重新启动程序时恢复上次关闭"/><Run Language="zh-cn" Text="时"/><Run Text="的位置和大小。"/></TextBlock>
-                <ToggleButton x:Name="RecordPosition" Content="✖️" HorizontalAlignment="Right" Margin="0,275,35,0" VerticalAlignment="Top" IsChecked="True"/>
+                <Grid x:Name="Normal" Visibility="Collapsed">
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,15,0,0"><Run Language="zh-cn" Text="自定义标题"/></TextBlock>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,45,0,0"><Run Text="标题"/><Run Language="zh-cn" Text="将"/><Run Text="会作为排行榜窗口标题和侧边栏底部标题。"/></TextBlock>
+                    <ToggleButton x:Name="NoChangeHot" Content="✖️" HorizontalAlignment="Right" Margin="0,98,35,0" VerticalAlignment="Top"/>
+                    <Separator HorizontalContentAlignment="Stretch" Background="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" Margin="27,76,27,2" VerticalAlignment="Top"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,89,0,0" Text="允许保留热度"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,119,0,0" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" Text="在编辑已有的热点内容后，允许保留其原有热度。"/>
+                    <TextBox x:Name="TitleBox" HorizontalAlignment="Right" MaxLength="10" Margin="0,27,35,0" TextWrapping="Wrap" Text="班级热搜" VerticalAlignment="Top" Width="145" FontSize="14" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,149,0,0" Text="记录窗口位置"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,179,0,0" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"><Run Text="打开后，将在下次重新启动程序时恢复上次关闭"/><Run Language="zh-cn" Text="时"/><Run Text="的位置和大小。"/></TextBlock>
+                    <ToggleButton x:Name="RecordPosition" Content="✖️" HorizontalAlignment="Right" Margin="0,158,35,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,210,0,0"><Run Language="zh-cn" Text="自动深色模式"/></TextBlock>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,240,0,0" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"><Run Text="打开后，"/><Run Language="zh-cn" Text="程序将自动跟随系统深浅色模式变化。"/></TextBlock>
+                    <ToggleButton x:Name="AutoDarkChanger" Content="✖️" HorizontalAlignment="Right" Margin="0,222,35,0" VerticalAlignment="Top" IsChecked="True"/>
+                </Grid>
+                <Grid x:Name="Personality">
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,15,0,0"><Run Language="zh-cn" Text="选择背景"/></TextBlock>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,45,0,0" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"><Run Language="zh-cn" Text="一张将在排行榜界面展示的背景图片，推荐竖版。"/></TextBlock>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Medium" FontSize="20" Margin="35,82,0,0"><Run Language="zh-cn" Text="浅色："/></TextBlock>
+                    <Image x:Name="LighBackImg" HorizontalAlignment="Left" VerticalAlignment="Top" Source="/HotSearch.png" Stretch="UniformToFill" Width="128" Margin="122,84,0,0"/>
+                    <Button x:Name="BackgroungCustom" Content="选取" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="37,120,0,0" Background="{DynamicResource MaterialDesign.Brush.Primary.Background}" BorderBrush="#FFFF6060" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                    <Button x:Name="BackgroungNormal" Content="默认" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,26,35,0" Background="#FFFF6565" BorderBrush="#FFFF6060" HorizontalContentAlignment="Center" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Background}"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="22" Margin="30,308,0,0"><Run Language="zh-cn" Text="选择头图"/></TextBlock>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC" FontSize="16" Margin="35,338,0,0" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"><Run Text="一张将在"/><Run Language="zh-cn" Text="侧边菜单栏顶部展示的封面"/><Run Text="，推荐"/><Run Language="zh-cn" Text="横版"/><Run Text="。"/></TextBlock>
+                    <Button x:Name="HeadCustom" Content="选取" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="37,418,0,0" Background="{DynamicResource MaterialDesign.Brush.Primary.Background}" BorderBrush="#FFFF6060" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                    <Button x:Name="HeadNormal" Content="默认" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,320,35,0" Background="#FFFF6565" BorderBrush="#FFFF6060" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Background}"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Medium" FontSize="20" Margin="322,82,0,0"><Run Language="zh-cn" Text="深"/><Run Text="色："/></TextBlock>
+                    <Image x:Name="DarkBackImg" HorizontalAlignment="Left" VerticalAlignment="Top" Source="/HotSearch.Dark.png" Width="128" Margin="408,84,0,0" Stretch="UniformToFill"/>
+                    <Button x:Name="BackgroungCustomDark" Content="选取" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="326,120,0,0" Background="{DynamicResource MaterialDesign.Brush.Primary.Background}" BorderBrush="#FFFF6060" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Medium" FontSize="20" Margin="35,378,0,0"><Run Language="zh-cn" Text="浅色："/></TextBlock>
+                    <Image x:Name="LighHeadImg" HorizontalAlignment="Left" VerticalAlignment="Top" Source="/HotSearchHead.png" Stretch="UniformToFill" Width="196" Margin="122,380,0,0"/>
+                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Medium" FontSize="20" Margin="358,378,0,0"><Run Language="zh-cn" Text="深"/><Run Text="色："/></TextBlock>
+                    <Image x:Name="DarkHeadImg" HorizontalAlignment="Left" VerticalAlignment="Top" Source="/HotSearchHead.Dark.png" Stretch="UniformToFill" Width="196" Margin="444,380,0,0"/>
+                    <Button x:Name="HeadCustomDark" Content="选取" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="361,418,0,0" Background="{DynamicResource MaterialDesign.Brush.Primary.Background}" BorderBrush="#FFFF6060" Foreground="{DynamicResource MaterialDesign.Brush.Primary}"/>
+                </Grid>
+                <Grid x:Name="Updating">
+                    <Image x:Name="image" Margin="16,12,0,0" Source="/gas-burner-custom.png" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="73" Height="72.76">
+                        <Image.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Image.RenderTransform>
+                    </Image>
+                    <TextBlock x:Name="UpdateVersionName" TextWrapping="Wrap" Margin="93,19,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="32" Foreground="#FFF41E1E"><Run Language="zh-cn" Text="未检查更新"/></TextBlock>
+                    <TextBlock x:Name="UpdateUUID" TextWrapping="Wrap" Margin="92,61,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="HarmonyOS Sans SC Black" FontSize="14" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" Width="543"><Run Language="zh-cn" Text="构建号"/></TextBlock>
+                    <RichTextBox x:Name="UpdateInformation" IsReadOnly="True" Margin="20,102,5,0" VerticalAlignment="Top" BorderBrush="#7F000000"></RichTextBox>
+                    <ProgressBar x:Name="UpdateProgress" IsIndeterminate="True" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" Margin="18,95,0,0" Visibility="Hidden"/>
+                    <Button x:Name="CUpdate" HorizontalAlignment="Right" Content="瞅一眼更新" Background="{DynamicResource MaterialDesign.Brush.Primary}" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Background}" VerticalAlignment="Top" Margin="0,30,20,0"></Button>
+                    <Button x:Name="DUpdate" HorizontalAlignment="Right" Content="下载更新 →" Background="{DynamicResource MaterialDesign.Brush.Primary}" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Background}" VerticalAlignment="Top" Margin="0,30,138,0" Visibility="Hidden"></Button>
+                </Grid>
             </Grid>
         </ScrollViewer>
 
-        <Button x:Name="CheckUpdates" Content="检查更新（Github Releases）" VerticalAlignment="Bottom" Background="#FFFF6060" BorderBrush="#FFFF6060" Height="40"/>
+        <Button x:Name="CheckUpdates" Content="检查更新（Github Releases）" VerticalAlignment="Bottom" Background="#FFFF6060" BorderBrush="#FFFF6060" Height="40" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Background}"/>
+
+        <StackPanel VerticalAlignment="Bottom">
+            <Grid
+    Height="85"
+    Background="{DynamicResource MaterialDesignCardBackground}" VerticalAlignment="Bottom">
+                <ListBox x:Name="PageFounder"
+      Height="85"
+      SelectedIndex="0"
+      Style="{StaticResource MaterialDesign3.NavigationBarPrimaryListBox}">
+                    <ListBoxItem Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}">
+                        <ListBoxItem.Style>
+                            <Style
+            TargetType="ListBoxItem"
+            BasedOn="{StaticResource MaterialDesign3.NavigationBarPrimaryListBoxItem}">
+                                <Setter
+              Property="materialDesign:NavigationBarAssist.SelectedIcon"
+              Value="Cog" />
+                                <Setter
+              Property="materialDesign:NavigationBarAssist.UnselectedIcon"
+              Value="CogOutline" />
+                            </Style>
+                        </ListBoxItem.Style>
+                        <TextBlock
+          Text="常规" FontSize="16" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+                    </ListBoxItem>
+                    <ListBoxItem Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}">
+                        <ListBoxItem.Style>
+                            <Style
+            TargetType="ListBoxItem"
+            BasedOn="{StaticResource MaterialDesign3.NavigationBarPrimaryListBoxItem}">
+                                <Setter
+              Property="materialDesign:NavigationBarAssist.SelectedIcon"
+              Value="Palette" />
+                                <Setter
+              Property="materialDesign:NavigationBarAssist.UnselectedIcon"
+              Value="PaletteOutline" />
+                            </Style>
+                        </ListBoxItem.Style>
+                        <TextBlock
+          Text="个性化" FontSize="16" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+                    </ListBoxItem>
+                    <ListBoxItem Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}">
+                        <ListBoxItem.Style>
+                            <Style
+            TargetType="ListBoxItem"
+            BasedOn="{StaticResource MaterialDesign3.NavigationBarPrimaryListBoxItem}">
+                                <Setter
+              Property="materialDesign:NavigationBarAssist.SelectedIcon"
+              Value="StarShooting" />
+                                <Setter
+              Property="materialDesign:NavigationBarAssist.UnselectedIcon"
+              Value="StarShootingOutline" />
+                            </Style>
+                        </ListBoxItem.Style>
+                        <TextBlock
+          Text="检查更新" FontSize="16" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+                    </ListBoxItem>
+                </ListBox>
+            </Grid>
+        </StackPanel>
+
         <materialDesign:Snackbar
   x:Name="SnackbarOne"
   IsActive="False"

@@ -7,7 +7,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Name="window" x:Class="MainWindow"
         mc:Ignorable="d"
-        Title="班级热搜排行榜" Height="768" Width="452" Background="{x:Null}" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResizeWithGrip" Icon="/gas-burner-custom.png" >
+        Title="班级热搜排行榜" Height="768" Width="452" Background="{x:Null}" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResizeWithGrip" Icon="/gas-burner-custom.png" AllowDrop="True" MinWidth="376" MinHeight="395" >
     <Window.Resources>
         <WindowChrome x:Key="WindowChromeKey">
             <WindowChrome.ResizeBorderThickness>0</WindowChrome.ResizeBorderThickness>
@@ -20,15 +20,15 @@
                 <Image x:Name="BackImage" Source="/HotSearch.png" VerticalAlignment="Top" Stretch="UniformToFill" Visibility="Hidden" />
             </Border>
 
-            <materialDesign:Card
+            <materialDesign:Card x:Name="MainForm"
 Padding="8"
-Background="White"
 Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
 UniformCornerRadius="6" Margin="15,222,15,20">
                 <materialDesign:Card.Effect>
                     <DropShadowEffect BlurRadius="22" Color="#FFC9C9C9" ShadowDepth="0"/>
                 </materialDesign:Card.Effect>
                 <ListBox x:Name="HotSearchList" HorizontalContentAlignment="Stretch" BorderBrush="{x:Null}" Background="{x:Null}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,0,0,45">
+                    
                     <Grid x:Name="No1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -108,7 +108,7 @@ UniformCornerRadius="6" Margin="15,222,15,20">
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Text="5" Opacity="0.995" FontFamily="HarmonyOS Sans SC Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="10,0,11,0" Foreground="#E57F7F7F" Margin="0,9,0,0"/>
-                        <TextBox SelectionBrush="#E5FF0000" GotFocus="OnTextEdit" LostFocus="UnTextEdit" Margin="5,0,5,0" Text="Oi！小鬼，感受到我们七班的火热了吗？" FontFamily="HarmonyOS Sans SC Light" FontSize="28" Grid.Column="1" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" Padding="0,6,0,4" VerticalAlignment="Top"/>
+                        <TextBox SelectionBrush="#E5FF0000" GotFocus="OnTextEdit" LostFocus="UnTextEdit" Margin="5,0,5,0" Text="Oi！小鬼，感受到我们七班的火热了吗？" FontFamily="HarmonyOS Sans SC Light" FontSize="28" Grid.Column="1" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" Padding="0,6,0,4" VerticalAlignment="Top" Foreground="#E5000000"/>
                         <materialDesign:PackIcon Kind="FireCircle" Foreground="#E5FF0000" HorizontalAlignment="Center" VerticalAlignment="Top" Height="32" Width="36" Grid.Column="2" Margin="-2,2,0,0" />
                         <TextBlock Grid.Column="2" Margin="0,34,0,0" Text="1145+" VerticalAlignment="Top" FontSize="16" FontFamily="HarmonyOS Sans Medium" HorizontalAlignment="Center"/>
                     </Grid>
@@ -133,23 +133,31 @@ UniformCornerRadius="6" Margin="15,222,15,20">
 AutomationProperties.Name="HamburgerToggleButton"
 Click="MenuToggleButton_OnClick"
 IsChecked="False"
-Style="{StaticResource MaterialDesignHamburgerToggleButton}" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF565656" Margin="30,15,0,31" >
+ToolTip="展开菜单"
+Style="{StaticResource MaterialDesignHamburgerToggleButton}" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" Margin="30,15,0,31" BorderBrush="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" Cursor="Hand" >
                 <ToggleButton.Background>
                     <SolidColorBrush Color="White" Opacity="0.005"/>
                 </ToggleButton.Background>
             </ToggleButton>
 
-            <materialDesign:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding IsChecked, ElementName=MenuToggleButton}" LeftDrawerBackground="#FFF1F1F1">
+            <Button x:Name="DarkModeButton"
+  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignIconButton}"
+  ToolTip="灯泡" Margin="72,0,0,32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="30" Height="30">
+                <materialDesign:PackIcon x:Name="DarkModeButtonSign" Kind="Lightbulb" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+            </Button>
+
+            <materialDesign:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding IsChecked, ElementName=MenuToggleButton}" >
                 <materialDesign:DrawerHost.LeftDrawerContent >
-                    <DockPanel x:Name="drawerPanel" MinWidth="220" Background="#FFFEFDFE" >
+                    <DockPanel x:Name="drawerPanel" MinWidth="220" Background="{DynamicResource MaterialDesign.Brush.Primary.Background}" >
                         <StackPanel x:Name="HeadPanel" DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Left">
                             <ToggleButton Margin="16"
             HorizontalAlignment="Left"
             DockPanel.Dock="Top"
             IsChecked="{Binding IsChecked, ElementName=MenuToggleButton, Mode=TwoWay}"
-            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+            Style="{StaticResource MaterialDesignHamburgerToggleButton}" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
 
-                            <TextBlock x:Name="HotTitleText" Text="班级热搜字啊" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,0,25,0" FontSize="24" FontFamily="HarmonyOS Sans SC Black" FontWeight="Bold" Foreground="#FF1D1D1D"/>
+                            <TextBlock x:Name="HotTitleText" Text="班级热搜字啊" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,0,25,0" FontSize="24" FontFamily="HarmonyOS Sans SC Black" FontWeight="Bold" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"/>
                         </StackPanel>
 
                         <TextBox x:Name="DemoItemsSearchBox"
@@ -176,12 +184,12 @@ Style="{StaticResource MaterialDesignHamburgerToggleButton}" Width="32" Height="
                             <ListBox.Style>
                                 <StaticResource ResourceKey="MaterialDesignNavigationPrimaryListBox"/>
                             </ListBox.Style>
-                            <materialDesign:TreeListViewItem x:Name="AddHotItem" Content="➕ 添加热搜词条" Cursor="Hand" IsSelected="False"/>
-                            <Separator Margin="0,0,0,0" Background="Black" VerticalAlignment="Top"/>
-                            <materialDesign:TreeListViewItem x:Name="HotSettingsButton" Cursor="Hand" Content="⚙️ 设置" Margin="4,0,4,2"/>
-                            <materialDesign:TreeListViewItem x:Name="AboutHot" Cursor="Hand" Content="ℹ️ 关于"/>
-                            <Separator Margin="0,0,0,0" Background="Black"/>
-                            <materialDesign:TreeListViewItem x:Name="CloseHot" Content="✖️ 关闭" Margin="4,0,4,2"/>
+                            <materialDesign:TreeListViewItem x:Name="AddHotItem" Content="➕ 添加热搜词条" Cursor="Hand" IsSelected="False" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"/>
+                            <Separator Margin="0,0,0,0" Background="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" VerticalAlignment="Top"/>
+                            <materialDesign:TreeListViewItem x:Name="HotSettingsButton" Cursor="Hand" Content="⚙️ 设置" Margin="4,0,4,2" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"/>
+                            <materialDesign:TreeListViewItem x:Name="AboutHot" Cursor="Hand" Content="ℹ️ 关于" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"/>
+                            <Separator Margin="0,0,0,0" Background="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"/>
+                            <materialDesign:TreeListViewItem x:Name="CloseHot" Content="✖️ 关闭" Margin="4,0,4,2" Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"/>
                         </ListBox>
                     </DockPanel>
                 </materialDesign:DrawerHost.LeftDrawerContent>
@@ -190,12 +198,12 @@ Style="{StaticResource MaterialDesignHamburgerToggleButton}" Width="32" Height="
             <materialDesign:DialogHost x:Name="MessageDialog" 
                              Identifier="Msg"
                                  DialogContentUniformCornerRadius="18"
-                                 DialogTheme="Inherit">
+                                 DialogTheme="Inherit" Visibility="Collapsed">
                 <materialDesign:DialogHost.DialogContent>
                     <StackPanel>
                         <TextBlock x:Name="DialogText" Text="Default text" Margin="16" FontFamily="HarmonyOS Sans SC Medium" FontSize="16" />
                         <StackPanel Orientation="Horizontal" Margin="16" HorizontalAlignment="Right">
-                            <CheckBox x:Name="Retain" Content="保留热度" Style="{StaticResource MaterialDesignFilterChipCheckBox}" IsChecked="False" Background="#FF673AB7" Foreground="#FF673AB7" Visibility="Collapsed"/>
+                            <CheckBox x:Name="Retain" Content="保留热度" Style="{StaticResource MaterialDesignFilterChipCheckBox}" IsChecked="False" Background="{DynamicResource MaterialDesign.Brush.Primary}" Foreground="{DynamicResource MaterialDesign.Brush.Primary}" Visibility="Collapsed"/>
                             <Button x:Name="MessageGood" Content="更改" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsDefault="True" CommandParameter="True" Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Right" Margin="15,0,0,0"/>
                             <Button x:Name="MessageBad" Content="取消" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" IsCancel="True" CommandParameter="False" Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Right"/>
                         </StackPanel>
@@ -206,7 +214,7 @@ Style="{StaticResource MaterialDesignHamburgerToggleButton}" Width="32" Height="
             <materialDesign:DialogHost x:Name="SingleDialog" 
                  Identifier="single"
                      DialogContentUniformCornerRadius="18"
-                     DialogTheme="Inherit">
+                     DialogTheme="Inherit" Visibility="Collapsed">
                 <materialDesign:DialogHost.DialogContent>
                     <StackPanel>
                         <TextBlock x:Name="singleText" Text="Default text" Margin="16" FontFamily="HarmonyOS Sans SC Medium" FontSize="16" />
@@ -220,7 +228,7 @@ Style="{StaticResource MaterialDesignHamburgerToggleButton}" Width="32" Height="
             <materialDesign:DialogHost x:Name="LoadingDialog" 
                  Identifier="Loading"
                      DialogContentUniformCornerRadius="20"
-                     DialogTheme="Inherit">
+                     DialogTheme="Inherit" Visibility="Collapsed">
                 <materialDesign:DialogHost.DialogContent>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="2">
@@ -237,7 +245,7 @@ Style="{StaticResource MaterialDesignHamburgerToggleButton}" Width="32" Height="
             <materialDesign:DialogHost x:Name="AddDialog" 
                Identifier="Add"
                    DialogContentUniformCornerRadius="18"
-                   DialogTheme="Inherit"
+                   DialogTheme="Inherit" Visibility="Collapsed"
                                        >
                 <materialDesign:DialogHost.DialogContent>
                     <StackPanel Margin="16">

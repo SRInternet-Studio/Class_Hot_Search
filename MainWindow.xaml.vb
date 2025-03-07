@@ -4,6 +4,7 @@ Imports System.Windows.Media.Animation
 Imports System.Windows.Threading
 Imports MaterialDesignThemes.Wpf
 Imports MaterialDesignThemes.Wpf.Theme
+Imports Microsoft.Win32
 Imports Newtonsoft.Json
 Class MainWindow
     Public Shared AppPath = AppContext.BaseDirectory()
@@ -26,6 +27,18 @@ Class MainWindow
     Dim w2 As New Window2
     Dim w1 As New Window1
 
+    Private ReadOnly paletteHelper As New PaletteHelper()
+
+    Public Sub New()
+
+        ' 此调用是设计器所必需的。
+        InitializeComponent()
+
+        ' 在 InitializeComponent() 调用之后添加任何初始化。
+        AddHandler SystemEvents.UserPreferenceChanged, AddressOf SystemEvents_UserPreferenceChanged
+
+    End Sub
+
     Private Sub ResetTimer()
         If saveTimer.IsEnabled Then
             saveTimer.Stop()  ' 如果计时器在运行，先停止
@@ -34,26 +47,28 @@ Class MainWindow
     End Sub
 
     Async Function read_hot() As Task
-        Try
-            Dim UserSetting = File.ReadAllText(AppPath & "\hot_content.Sr")
-            Dim lines() As String = UserSetting.Split({Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
-            For i As Integer = 0 To lines.Length - 1
-                Console.WriteLine(lines(i))
-                Dim values As List(Of Object) = JsonConvert.DeserializeObject(Of List(Of Object))(lines(i))
-                hot_value.Add(values(0).ToString(), Convert.ToInt32(values(1)))
-            Next
+        Dim UserSetting = File.ReadAllText(AppPath & "\hot_content.Sr")
 
-            hot_value = hot_value.OrderByDescending(Function(pair) pair.Value).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
-            Return
-        Catch ex As Exception
-            Console.WriteLine(ex)
-        End Try
+        Dim entries = Regex.Matches(UserSetting, "\[(.*?)\]", RegexOptions.Singleline) ' 匹配方括号内的内容
 
+        For Each entry As Match In entries
+            Dim rawEntry As String = entry.Value
+            If Not String.IsNullOrWhiteSpace(rawEntry) Then
+                Console.WriteLine(rawEntry)
+                Dim values As List(Of Object) = JsonConvert.DeserializeObject(Of List(Of Object))(rawEntry)
+                If values IsNot Nothing AndAlso values.Count >= 2 Then ' 确保反序列化的结果有效
+                    hot_value.Add(values(0).ToString(), Convert.ToInt32(values(1)))
+                End If
+            End If
+        Next
+
+        hot_value = hot_value.OrderByDescending(Function(pair) pair.Value).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+        Return
     End Function
     Async Function save_hot() As Task
         saveTimer.Stop()
         DialogHost.Show(LoadingDialog.DialogContent, "Loading")
-        Await Task.Delay(500) '缓冲
+        Await Task.Delay(750) '缓冲
         Dim hot_database As String = String.Empty
         hot_value = hot_value.OrderByDescending(Function(pair) pair.Value).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
         For Each kvp In hot_value
@@ -107,7 +122,7 @@ Class MainWindow
         leftAnimation.From = Me.Left
         leftAnimation.To = targetLeft
         leftAnimation.Duration = TimeSpan.FromSeconds(time_duration)
-        leftAnimation.EasingFunction = New CubicEase() With {.EasingMode = EasingMode.EaseInOut} ' 设置缓动
+        leftAnimation.EasingFunction = New CubicEase() With {.EasingMode = EasingMode.EaseOut} ' 设置缓动
         Storyboard.SetTarget(leftAnimation, Me)
         Storyboard.SetTargetProperty(leftAnimation, New PropertyPath("Left"))
 
@@ -116,7 +131,7 @@ Class MainWindow
         topAnimation.From = Me.Top
         topAnimation.To = targetTop
         topAnimation.Duration = TimeSpan.FromSeconds(time_duration)
-        topAnimation.EasingFunction = New CubicEase() With {.EasingMode = EasingMode.EaseInOut} ' 设置缓动
+        topAnimation.EasingFunction = New CubicEase() With {.EasingMode = EasingMode.EaseOut} ' 设置缓动
         Storyboard.SetTarget(topAnimation, Me)
         Storyboard.SetTargetProperty(topAnimation, New PropertyPath("Top"))
 
@@ -125,7 +140,7 @@ Class MainWindow
         widthAnimation.From = Me.Width
         widthAnimation.To = targetWidth
         widthAnimation.Duration = TimeSpan.FromSeconds(time_duration)
-        widthAnimation.EasingFunction = New CubicEase() With {.EasingMode = EasingMode.EaseInOut} ' 设置缓动
+        widthAnimation.EasingFunction = New CubicEase() With {.EasingMode = EasingMode.EaseOut} ' 设置缓动
         Storyboard.SetTarget(widthAnimation, Me)
         Storyboard.SetTargetProperty(widthAnimation, New PropertyPath("Width"))
 
@@ -134,7 +149,7 @@ Class MainWindow
         heightAnimation.From = Me.Height
         heightAnimation.To = targetHeight
         heightAnimation.Duration = TimeSpan.FromSeconds(time_duration)
-        heightAnimation.EasingFunction = New CubicEase() With {.EasingMode = EasingMode.EaseInOut} ' 设置缓动
+        heightAnimation.EasingFunction = New CubicEase() With {.EasingMode = EasingMode.EaseOut} ' 设置缓动
         Storyboard.SetTarget(heightAnimation, Me)
         Storyboard.SetTargetProperty(heightAnimation, New PropertyPath("Height"))
 
@@ -161,19 +176,16 @@ Class MainWindow
         Me.Dispatcher.BeginInvoke(Sub()
                                       DialogHost.Show(LoadingDialog.DialogContent, "Loading")
                                   End Sub)
-        Await Task.Delay(500)
+        'Await Task.Delay(500)
+
+        AddDialog.Visibility = Visibility.Visible
+        LoadingDialog.Visibility = Visibility.Visible
+        SingleDialog.Visibility = Visibility.Visible
+        MessageDialog.Visibility = Visibility.Visible
+        drawerHost.Visibility = Visibility.Visible
 
         If Not File.Exists(AppPath & "\hot_content.Sr") Then
             File.Create(AppPath & "\hot_content.Sr")
-        End If
-
-        If Not File.Exists(AppPath & "\hot_settings.Sr") Then
-            Dim settingsString As String = "False
-Normal
-Normal
-班级热搜
-True"
-            File.WriteAllText(AppPath & "\hot_settings.Sr", settingsString)
         End If
 
         Application.Current.Dispatcher.Invoke(Sub()
@@ -212,7 +224,9 @@ True"
     Private Sub MainWindow_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles Me.MouseLeftButtonDown
         winLeft = Me.Left
         winTop = Me.Top
-        Me.DragMove()
+        If Not MainForm.IsMouseOver Then
+            Me.DragMove()
+        End If
     End Sub
 
     Private Sub BackImage_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles BackImage.MouseDown
@@ -288,7 +302,7 @@ True"
                     DialogText.Text = "更改排行榜内容将会清空当前条目的热度， " & vbCrLf & "是否继续？"
                     MessageGood.Content = "更改"
                     MessageBad.Content = "取消"
-                    If Convert.ToBoolean(Settings.settings(0)) Then
+                    If Settings.settings.NoChangeHot Then
                         Retain.Visibility = Visibility.Visible
                     End If
                     Dim question_to_save_dialog = Await DialogHost.Show(MessageDialog.DialogContent, "Msg")
@@ -319,6 +333,7 @@ True"
             End If
 
         End If
+
         textBox.TextWrapping = TextWrapping.NoWrap
     End Sub
 
@@ -601,9 +616,9 @@ True"
 
             If index = 0 Then
                 Dim s As New Controls.Separator() With {
-                    .Margin = New Thickness(0, -8, 0, 7),
-                    .Background = New SolidColorBrush(Color.FromRgb(37, 37, 37))
+                    .Margin = New Thickness(0, -8, 0, 7)
                 }
+                s.SetResourceReference(Controls.Separator.BackgroundProperty, "MaterialDesign.Brush.Primary.Foreground")
                 HotSearchList.Items.Add(s)
             End If
 
@@ -617,17 +632,18 @@ True"
         Dim CloseHotAni As New DoubleAnimation()
         CloseHotAni.From = 1
         CloseHotAni.To = 0
-        CloseHotAni.Duration = New Duration(TimeSpan.FromSeconds(0.5))
+        CloseHotAni.Duration = New Duration(TimeSpan.FromSeconds(0.75))
 
         AddHandler CloseHotAni.Completed, Sub()
                                               Close()
+                                              Environment.Exit(0)
                                           End Sub
 
         BeginAnimation(window.OpacityProperty, CloseHotAni)
     End Sub
 
     Private Sub MainWindow_MouseLeftButtonUp(sender As Object, e As MouseButtonEventArgs) Handles Me.MouseLeftButtonUp
-        If (winTop <> Me.Top OrElse winLeft <> Me.Left) And Convert.ToBoolean(Settings.settings(4)) Then
+        If (winTop <> Me.Top OrElse winLeft <> Me.Left) And Settings.settings.RecordPosition Then
             winTop = Me.Top
             winLeft = Me.Left
             Dim winfo = $"{Me.Left().ToString()}*{Me.Top().ToString()}*{Me.ActualWidth().ToString()}*{Me.ActualHeight().ToString()}"
@@ -662,30 +678,17 @@ True"
         CloseWindow_Click()
     End Sub
 
+    Private Sub SystemEvents_UserPreferenceChanged(sender As Object, e As UserPreferenceChangedEventArgs)
+        If e.Category = UserPreferenceCategory.General And Settings.settings.AutoDarkMode Then
+            ChangePreference(GetSysTheme.GetSysTheme())
+        End If
+    End Sub
+
     Private Sub ApplySettings()
-        If Settings.settings.Length < 5 Then
-            MessageBox.Show("发生错误，设置文件可能已经损坏:" & vbCrLf & "文件中的索引长度小于指定长度。", "错误", MessageBoxButton.OK, MessageBoxImage.Error)
-
-            Dim settingsString As String = "False
-Normal
-Normal
-班级热搜
-True"
-            File.WriteAllText(AppPath & "\hot_settings.Sr", settingsString)
-            Settings.Read()
-        End If
-
-        Me.Title = Settings.settings(3)
-        HotTitleText.Text = Settings.settings(3)
-        If Settings.settings(1) <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearch.png")) Then
-            BackImage.Source = New BitmapImage(New Uri(Settings.settings(1)))
-        Else
-            BackImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearch.png"))
-        End If
-        If Settings.settings(2) <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearchHead.png")) Then
-            HeadImage.Source = New BitmapImage(New Uri(Settings.settings(2)))
-        Else
-            HeadImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearchHead.png"))
+        Me.Title = Settings.settings.Title
+        HotTitleText.Text = Settings.settings.Title
+        If Settings.settings.AutoDarkMode Then
+            ChangePreference(GetSysTheme.GetSysTheme())
         End If
 
         HeadPanel.InvalidateVisual()
@@ -797,5 +800,61 @@ True"
 
     Private Sub DemoItemsListBox_LostMouseCapture(sender As Object, e As MouseEventArgs) Handles DemoItemsListBox.LostMouseCapture
 
+    End Sub
+
+    Private Sub DarkModeButton_Click(sender As Object, e As RoutedEventArgs) Handles DarkModeButton.Click
+        Dim theme = paletteHelper.GetTheme()
+        If theme.GetBaseTheme() = BaseTheme.Dark Then
+            ChangePreference("Light")
+        Else
+            ChangePreference("Dark")
+        End If
+    End Sub
+
+    Private Sub ChangePreference(mode As String)
+        Dim theme = paletteHelper.GetTheme()
+        Select Case mode
+            Case "Light"
+                DarkModeButtonSign.Kind = PackIconKind.Lightbulb
+                theme.SetBaseTheme(BaseTheme.Light)
+                Application.Current.Resources("MaterialDesign.Brush.Primary.Foreground") = Application.Current.Resources("MaterialDesign.Brush.Primary.Light.Foreground")
+                Application.Current.Resources("MaterialDesign.Brush.Primary.Background") = Application.Current.Resources("MaterialDesign.Brush.Primary.Dark.Foreground")
+                Application.Current.Resources("MaterialDesign.Brush.Company") = Application.Current.Resources("MaterialDesign.Brush.Company.Light")
+                CurrentEvents.RaiseThemeChangedEvent("Light")
+
+                If Settings.settings.BackgroundLight <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearch.png")) Then
+                    BackImage.Source = New BitmapImage(New Uri(Settings.settings.BackgroundLight))
+                Else
+                    BackImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearch.png"))
+                End If
+
+                If Settings.settings.HeadImageLight <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearchHead.png")) Then
+                    HeadImage.Source = New BitmapImage(New Uri(Settings.settings.HeadImageLight))
+                Else
+                    HeadImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearchHead.png"))
+                End If
+
+            Case "Dark"
+                DarkModeButtonSign.Kind = PackIconKind.LightbulbOutline
+                theme.SetBaseTheme(BaseTheme.Dark)
+                Application.Current.Resources("MaterialDesign.Brush.Primary.Background") = Application.Current.Resources("MaterialDesign.Brush.Secondary.Foreground")
+                Application.Current.Resources("MaterialDesign.Brush.Primary.Foreground") = Application.Current.Resources("MaterialDesign.Brush.Primary.Dark.Foreground")
+                Application.Current.Resources("MaterialDesign.Brush.Company") = Application.Current.Resources("MaterialDesign.Brush.Company.Dark")
+                CurrentEvents.RaiseThemeChangedEvent("Dark")
+
+                If Settings.settings.BackgroundDark <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearch.Dark.png")) Then
+                    BackImage.Source = New BitmapImage(New Uri(Settings.settings.BackgroundDark))
+                Else
+                    BackImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearch.Dark.png"))
+                End If
+
+                If Settings.settings.HeadImageDark <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearchHead.Dark.png")) Then
+                    HeadImage.Source = New BitmapImage(New Uri(Settings.settings.HeadImageDark))
+                Else
+                    HeadImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearchHead.Dark.png"))
+                End If
+
+        End Select
+        paletteHelper.SetTheme(Theme)
     End Sub
 End Class
