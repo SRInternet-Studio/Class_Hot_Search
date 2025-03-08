@@ -823,13 +823,13 @@ Class MainWindow
                 CurrentEvents.RaiseThemeChangedEvent("Light")
 
                 If Settings.settings.BackgroundLight <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearch.png")) Then
-                    BackImage.Source = New BitmapImage(New Uri(Settings.settings.BackgroundLight))
+                    BackImage.Source = LoadImageToMEM.LoadImageFromPath(Settings.settings.BackgroundLight)
                 Else
                     BackImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearch.png"))
                 End If
 
                 If Settings.settings.HeadImageLight <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearchHead.png")) Then
-                    HeadImage.Source = New BitmapImage(New Uri(Settings.settings.HeadImageLight))
+                    HeadImage.Source = LoadImageToMEM.LoadImageFromPath(Settings.settings.HeadImageLight)
                 Else
                     HeadImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearchHead.png"))
                 End If
@@ -843,13 +843,13 @@ Class MainWindow
                 CurrentEvents.RaiseThemeChangedEvent("Dark")
 
                 If Settings.settings.BackgroundDark <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearch.Dark.png")) Then
-                    BackImage.Source = New BitmapImage(New Uri(Settings.settings.BackgroundDark))
+                    BackImage.Source = LoadImageToMEM.LoadImageFromPath(Settings.settings.BackgroundDark)
                 Else
                     BackImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearch.Dark.png"))
                 End If
 
                 If Settings.settings.HeadImageDark <> "Normal" And Directory.Exists(Path.Combine(AppPath, "resource")) And File.Exists(Path.Combine(AppPath, "resource/HotSearchHead.Dark.png")) Then
-                    HeadImage.Source = New BitmapImage(New Uri(Settings.settings.HeadImageDark))
+                    HeadImage.Source = LoadImageToMEM.LoadImageFromPath(Settings.settings.HeadImageDark)
                 Else
                     HeadImage.Source = New BitmapImage(New Uri("pack://application:,,,/HotSearchHead.Dark.png"))
                 End If

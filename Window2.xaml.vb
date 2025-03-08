@@ -37,16 +37,16 @@ Public Class Window2
         IsOpen = True
         Try
             If Settings.settings.BackgroundLight <> "Normal" Then
-                LighBackImg.Source = New BitmapImage(New Uri(Path.Combine(AppPath, "resource/HotSearch.png")))
+                LighBackImg.Source = LoadImageToMEM.LoadImageFromPath(Path.Combine(AppPath, "resource/HotSearch.png"))
             End If
             If Settings.settings.BackgroundDark <> "Normal" Then
-                DarkBackImg.Source = New BitmapImage(New Uri(Path.Combine(AppPath, "resource/HotSearch.Dark.png")))
+                DarkBackImg.Source = LoadImageToMEM.LoadImageFromPath(Path.Combine(AppPath, "resource/HotSearch.Dark.png"))
             End If
             If Settings.settings.HeadImageLight <> "Normal" Then
-                LighHeadImg.Source = New BitmapImage(New Uri(Path.Combine(AppPath, "resource/HotSearchHead.png")))
+                LighHeadImg.Source = LoadImageToMEM.LoadImageFromPath(Path.Combine(AppPath, "resource/HotSearchHead.png"))
             End If
             If Settings.settings.HeadImageDark <> "Normal" Then
-                DarkHeadImg.Source = New BitmapImage(New Uri(Path.Combine(AppPath, "resource/HotSearchHead.Dark.png")))
+                DarkHeadImg.Source = LoadImageToMEM.LoadImageFromPath(Path.Combine(AppPath, "resource/HotSearchHead.Dark.png"))
             End If
 
             NoChangeHot.IsChecked = Settings.settings.NoChangeHot
@@ -72,7 +72,7 @@ Public Class Window2
         Dim outputFilePath As String = Path.Combine(AppPath, "resource/HotSearchHead.png")
         If openImage(outputFilePath, "选取头图封面", False) Then
             Settings.settings.HeadImageLight = outputFilePath
-            LighHeadImg.Source = New BitmapImage(New Uri(Settings.settings.HeadImageLight))
+            LighHeadImg.Source = LoadImageToMEM.LoadImageFromPath(Settings.settings.HeadImageLight)
             CompletedTip()
         End If
 
@@ -85,7 +85,7 @@ Public Class Window2
         Dim outputFilePath As String = Path.Combine(AppPath, "resource/HotSearch.png")
         If openImage(outputFilePath, "选取背景图片", True) Then
             Settings.settings.BackgroundLight = outputFilePath
-            LighBackImg.Source = New BitmapImage(New Uri(Settings.settings.BackgroundLight))
+            LighBackImg.Source = LoadImageToMEM.LoadImageFromPath(Settings.settings.BackgroundLight)
             CompletedTip()
         End If
 
@@ -98,7 +98,7 @@ Public Class Window2
         Dim outputFilePath As String = Path.Combine(AppPath, "resource/HotSearch.Dark.png")
         If openImage(outputFilePath, "选取背景图片（深色模式）", True) Then
             Settings.settings.BackgroundDark = outputFilePath
-            DarkBackImg.Source = New BitmapImage(New Uri(Settings.settings.BackgroundDark))
+            DarkBackImg.Source = LoadImageToMEM.LoadImageFromPath(Settings.settings.BackgroundDark)
             CompletedTip()
         End If
 
@@ -111,7 +111,7 @@ Public Class Window2
         Dim outputFilePath As String = Path.Combine(AppPath, "resource/HotSearchHead.Dark.png")
         If openImage(outputFilePath, "选取头图封面（深色模式）", False) Then
             Settings.settings.HeadImageDark = outputFilePath
-            DarkHeadImg.Source = New BitmapImage(New Uri(Settings.settings.HeadImageDark))
+            DarkHeadImg.Source = LoadImageToMEM.LoadImageFromPath(Settings.settings.HeadImageDark)
             CompletedTip()
         End If
 
@@ -143,7 +143,7 @@ Public Class Window2
 
     Private Function openImage(outputFilePath As String, t As String, IsBackImage As Boolean) As Boolean
         Dim openFileDialog As New OpenFileDialog()
-        openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png"
+        openFileDialog.Filter = "可控图片格式|*.jpg;*.jpeg;*.png;*.bmp"
         openFileDialog.Title = t
 
         If openFileDialog.ShowDialog() = True Then
@@ -152,7 +152,14 @@ Public Class Window2
             Dim image As Bitmap = Nothing
 
             Try
-                image = New System.Drawing.Bitmap(selectedFilePath)
+
+                Try
+                    image = New System.Drawing.Bitmap(selectedFilePath)
+                Catch ex As Exception
+                    MessageBox.Show("图片不受支持或已损坏，或图片格式与实际扩展名不符。请更换图片后重试。 ", "班级热搜排行榜 - 内存安全阀", MessageBoxButton.OK, MessageBoxImage.Error)
+                    Return False
+                    Exit Function
+                End Try
 
                 If IsBackImage Then
                     ' 检查分辨率
@@ -175,7 +182,7 @@ Public Class Window2
                         If compressedImage IsNot Nothing Then
                             compressedImage.Save(outputFilePath, ImageFormat.Png)
                         Else
-                            MsgBox("图像过大，大于 1080p ，请调整图片大小后重试。", vbExclamation, "班级热搜排行榜")
+                            MsgBox("图像过大，大于 1080p ，请调整图片大小后重试。", vbExclamation, "班级热搜排行榜 - 内存安全阀")
                         End If
 
                         compressedImage.Dispose()
@@ -188,7 +195,7 @@ Public Class Window2
                 End If
                 Return True
             Catch ex As Exception
-                MessageBox.Show("发生错误: " & ex.ToString, "错误", MessageBoxButton.OK, MessageBoxImage.Error)
+                MessageBox.Show("发生错误：" & ex.ToString & $"{vbCrLf}   at {selectedFilePath} {vbCrLf}更换图片可能有助于解决此问题。", "班级热搜排行榜 - 内存安全阀 - 错误", MessageBoxButton.OK, MessageBoxImage.Error)
             Finally
                 ' 确保资源得到释放
                 If image IsNot Nothing Then
