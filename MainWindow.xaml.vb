@@ -689,6 +689,13 @@ Class MainWindow
         HotTitleText.Text = Settings.settings.Title
         If Settings.settings.AutoDarkMode Then
             ChangePreference(GetSysTheme.GetSysTheme())
+        Else
+            Dim theme = paletteHelper.GetTheme()
+            If theme.GetBaseTheme() = BaseTheme.Dark Then
+                ChangePreference("Dark")
+            Else
+                ChangePreference("Light")
+            End If
         End If
 
         HeadPanel.InvalidateVisual()
